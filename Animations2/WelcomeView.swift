@@ -10,6 +10,7 @@ import SwiftUI
 struct WelcomeView: View {
     @Binding var hasStarted: Bool
     @State private var scale: CGFloat = 0.9
+    @State private var opacity: Double = 1.0
 
     var body: some View {
         VStack(spacing: 24) {
@@ -29,7 +30,11 @@ struct WelcomeView: View {
                 .padding(.horizontal)
 
             Button {
-                hasStarted = true
+                withAnimation(.easeOut(duration: 0.4)) {
+                    opacity = 0.0
+                } completion: {
+                    hasStarted = true
+                }
             } label: {
                 Text("Begin")
                     .font(.headline)
@@ -41,7 +46,8 @@ struct WelcomeView: View {
                     .shadow(radius: 6, y: 4)
             }
             .buttonStyle(.plain)
-        }
+            
+        }.opacity(opacity)
     }
 }
 
