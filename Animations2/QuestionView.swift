@@ -10,8 +10,9 @@ import SwiftUI
 struct QuestionView: View {
     @Binding var questionIndex: Int
     @Binding var incorrectCount: Int
+
     
-    var question = Question(question: "What year is it?", answers: ["2026","2o26", "twenty-twenty-six", "the year it is now"], correctIndex: 3)
+    var question: Question
     
     let cols = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -24,43 +25,15 @@ struct QuestionView: View {
                 .padding()
             LazyVGrid(columns: cols, spacing: 15) {
                 ForEach(question.answers.indices, id: \.self) { index in
-                    AnswerRow(isCorrectSelected: index == question.correctIndex, answerText: question.answers[index])
-                    .onTapGesture {
-                        if index == question.correctIndex {
-                            questionIndex += 1
-                        }
-                        else {
-                            incorrectCount += 1
-                        }
-                    }
+                    AnswerRow(questionIndex: $questionIndex, incorrectCount: $incorrectCount, isCorrectSelected: index == question.correctIndex,  answerText: question.answers[index])
                 }
             }
         }
-        
-//        LazyVGrid(columns: cols, spacing: 15) {
-//            // TODO: implement with grid? item?? Generally just fix it wow
-//            ForEach(question.answers) { ans in
-//                VStack {
-//                    HStack {
-//                        Text(attendee.lastName)
-//                        Text(attendee.firstName)
-//                            .foregroundStyle(.secondary)
-//                        Spacer()
-//                    }
-//                    HStack {
-//                        Text(attendee.email)
-//                        Spacer()
-//                    }
-//                    .foregroundStyle(.secondary)
-//                    .font(.caption)
-//                }
-//            }
-//        }
     }
 }
 
 #Preview {
     @State @Previewable var questionIndex = 0
     @State @Previewable var incorrectCount = 0
-    QuestionView(questionIndex: $questionIndex, incorrectCount: $incorrectCount)
+    QuestionView(questionIndex: $questionIndex, incorrectCount: $incorrectCount, question: Question(question: "What year is it?", answers: ["2026","2o26", "twenty-twenty-six", "the year it is now"], correctIndex: 3))
 }

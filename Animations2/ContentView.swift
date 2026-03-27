@@ -26,7 +26,7 @@ struct ContentView: View {
                 WelcomeView(hasStarted: $hasStarted)
                     .transition(.scale.combined(with: .opacity))
             } else if currentIndex < questions.count {
-                QuestionView(questionIndex: $currentIndex, incorrectCount: $incorrectCount).transition(.scale.combined(with: .opacity)) //TODO: advancing to next question not working
+                QuestionView(questionIndex: $currentIndex, incorrectCount: $incorrectCount, question: questions[currentIndex]).transition(.slide.combined(with: .opacity)) 
             } else {
                 ResultView(incorrectCount: incorrectCount, total: questions.count, retake: retake)
                     .transition(.opacity.combined(with: .scale))

@@ -17,62 +17,46 @@ import SwiftUI
 //}
 
 struct AnswerRow: View {
+    @Binding var questionIndex: Int
+    @Binding var incorrectCount: Int
     var isCorrectSelected: Bool
     var answerText: String
-    var body: some View {
-        if isCorrectSelected {
-            correctAnswer(text: answerText)
-            
-        }
-        else {
-            wrongAnswer(text: answerText)
-        }
-    }
-}
-
-struct wrongAnswer: View {
-    @State private var didTap:Bool = false
-    @State private var animate: Bool = true
     
-    var text = "default wrong answer"
+    // Animation states
+    @State private var scale: CGFloat = 1
+    @State private var rotation: Double = 0
+    @State private var didTap = false
+    
     
     var body: some View {
-        PhaseAnimator([0,-15,15,-15,180], trigger: animate){ phase in
-        Text(text).padding()
-            .background(didTap ? .red : .blue)
+        Text(answerText).padding()
+            .foregroundStyle(.white)
+            .background(didTap ? Color.red : Color.green)
             .clipShape(.capsule)
             .onTapGesture {
-                didTap = true
-                animate.toggle()
-            }
-            .rotationEffect(Angle(degrees:phase))
-            }
-        }
-    }
-
-struct correctAnswer: View {
-    
-    @State private var didTap: Bool = false
-    @State private var animate: Bool = true
-    
-    var text = "default correct answer"
-    
-    var body: some View {
-        PhaseAnimator([1,99], trigger: animate){ phase in
-            Text(text).padding()
-                .background(didTap ? .green : .blue)
-                .clipShape(.capsule)
-                .onTapGesture {
-                    didTap = true
-                    animate.toggle()
+                if isCorrectSelected {
+                    withAnimation(.linear(duration: 0.3)) {
+                        scale = 30
+                    } completion: {
+                        questionIndex += 1
+                        withAnimation(.linear(duration: 0.3)) {
+                            scale = 1
+                        }
+                    }
                 }
-                .scaleEffect(phase)
-        }
+                else {
+                    withAnimation(.easeInOut(duration: 0.08).repeatCount(4, autoreverses: true)) {
+                        didTap = true
+                        rotation = 15
+                    } completion: {
+                        incorrectCount += 1
+                        rotation = 0
+                        didTap = false
+                    }
+                    
+                }
+            }
+            .scaleEffect(scale)
+            .rotationEffect(.degrees(rotation))
     }
-}
-
-
-#Preview {
-    wrongAnswer()
-    correctAnswer()
 }

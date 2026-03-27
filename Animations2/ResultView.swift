@@ -13,7 +13,7 @@ struct ResultView: View {
     var total: Int = 4
     var retake: () -> Void = { }
     var body: some View {
-        Text("You got \(incorrectCount) wrong out of \(total).")
+        Text("You selected the wrong answers \(incorrectCount) times for \(total) questions.")
         Button("Try again") {
             retake()
         }
