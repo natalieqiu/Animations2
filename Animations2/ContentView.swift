@@ -15,11 +15,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showDetails = false
+    // App State
+    @State private var hasStarted = false
+    @State private var questions: [Question] = sampleQuestions
+    @State private var currentIndex: Int = 0
+    @State private var incorrectCount: Int = 0
+
     var body: some View {
-        VStack {
+            if !hasStarted {
+                WelcomeView(hasStarted: $hasStarted)
+                    .transition(.scale.combined(with: .opacity))
+            } else if currentIndex < questions.count {
+                QuestionView(questionIndex: $currentIndex, incorrectCount: $incorrectCount).transition(.scale.combined(with: .opacity)) //TODO: advancing to next question not working
+            } else {
+                ResultView(incorrectCount: incorrectCount, total: questions.count, retake: retake)
+                    .transition(.opacity.combined(with: .scale))
+            }
+    }
+
+    private func retake() {
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.9)) {
+            questions.shuffle() // shuffle questions (not answers)
+            hasStarted = true
+            currentIndex = 0
+            incorrectCount = 0
         }
-        .padding()
     }
 }
 

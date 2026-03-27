@@ -16,6 +16,20 @@ import SwiftUI
 //    }
 //}
 
+struct AnswerRow: View {
+    var isCorrectSelected: Bool
+    var answerText: String
+    var body: some View {
+        if isCorrectSelected {
+            correctAnswer(text: answerText)
+            
+        }
+        else {
+            wrongAnswer(text: answerText)
+        }
+    }
+}
+
 struct wrongAnswer: View {
     @State private var didTap:Bool = false
     @State private var animate: Bool = true
@@ -48,13 +62,11 @@ struct correctAnswer: View {
             Text(text).padding()
                 .background(didTap ? .green : .blue)
                 .clipShape(.capsule)
-            //.phaseAnimator(<#T##phases: Sequence##Sequence#>, content: <#T##(PlaceholderContentView<View>, Equatable) -> View#>)
                 .onTapGesture {
                     didTap = true
                     animate.toggle()
                 }
                 .scaleEffect(phase)
-            // TODO: .transition the correct answer out
         }
     }
 }
